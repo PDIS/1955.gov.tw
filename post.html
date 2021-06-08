@@ -6,6 +6,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>  <title>e 化服務系統 : 個人網路申報及查詢作業</title>
   <title>e 化服務系統 : 個人網路申報及查詢作業</title>
   <style>
     html,
@@ -122,28 +123,28 @@
           <table border="0" class="text-reset">
             <tr>
               <td>姓名</td>
-              <td><input name="name" placeholder="測試測試">
+              <td><input name="name" placeholder="測試測試" required>
                 <p />
               </td>
             </tr>
             <tr>
               <td>出生日期</td>
-              <td><input name="birthday" placeholder="19710101">
+              <td><input name="birthday" placeholder="19710101" required>
                 <p />
               </td>
             </tr>
             <tr>
               <td>身分證號</td>
-              <td><input name="id" placeholder="B100000000">
+              <td><input name="id" placeholder="B100000000" required>
                 <p />
               </td>
             </tr>
             <tr>
               <td>給付方式</td>
               <td>
-                <label><input type="radio" name="type" value="1" checked>金融機構</label> /
-                <label><input type="radio" name="type" value="2">郵局</label> /
-                <label><input type="radio" name="type" value="3">支票</label>
+                <label><input type="radio" name="type" value="1" checked>1金融機構</label> /
+                <label><input type="radio" name="type" value="2">2郵局</label> /
+                <label><input type="radio" name="type" value="3">3支票</label>
                 <p />
               </td>
             </tr>
@@ -239,9 +240,46 @@
           style="color: #ff2020; text-decoration: underline;" target="_blank">此處</a>連結至說明專區）</div>
     </div>
   </div>
-
   <script>
-    document.querySelector("#apply input[name='name']").addEventListener("blur", (event) => {
+    $(function () {
+      $("#apply").on("submit", (e) => {
+        e.preventDefault()
+        if ($("#apply .invalid, #apply :invalid").length != 0) {
+          alert("請檢查您的申辦資料")
+        }
+        let apply = {}
+        $("#apply").serializeArray().forEach(pair => { apply[pair.name] = pair.value })
+        if (confirm("請確認您的申辦資料：\n"
+          + `姓　　名: ${apply.name}\n`
+          + `出生日期: ${apply.birthday}\n`
+          + `身分證號: ${apply.id}\n`
+          + `給付方式: ${apply.type}\n`
+          + `金融機構代號: ${apply.branch}\n`
+          + `金融帳戶: ${apply.account}\n`
+          + `郵遞區號: ${apply.post}\n`
+          + `縣　　市: ${apply.city}\n`
+          + `鄉鎮市區: ${apply.district}\n`
+          + `地　　址: ${apply.address}\n`
+          + `行動電話: ${apply.mobile}\n`
+          + `市　　話: ${apply.phone}\n`
+          + `申辦時間: ${apply.datetime}\n`
+          + "\n是否繼續?")) {
+          $.post("https://datapost.1955.gov.tw/me/querystatus", $("#apply").serialize()).then(
+            data => {
+              if (data === "200 OK") {
+                alert("已收案，請待本局處理您的案件。")
+                $("#apply").trigger("reset")
+              } else {
+                alert("發生錯誤，請稍後再試。(1)")
+              }
+            },
+            () => alert("發生錯誤，請稍後再試。(2)")
+          )
+        }
+      })
+    })
+
+    $("#apply input[name='name']").on("blur", function (event) {
       if (!/^.{0,20}$/.test(event.target.value)) {
         event.target.classList.add("invalid")
         event.target.nextElementSibling.innerText = "姓名應在20個字以內"
@@ -249,7 +287,8 @@
         event.target.classList.remove("invalid")
         event.target.nextElementSibling.innerText = ""
       }
-    });
+    })
+
     document.querySelector("#apply input[name='birthday']").addEventListener("blur", (event) => {
       if (!/^(18|19|20)[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$/.test(event.target.value)) {
         event.target.classList.add("invalid")
@@ -287,6 +326,7 @@
       }
     });
     document.querySelector("#apply input[name='post']").addEventListener("blur", (event) => {
+      console.log(event.target.value)
       if (!/^[0-9]{3,6}$/.test(event.target.value)) {
         event.target.classList.add("invalid")
         event.target.nextElementSibling.innerText = "郵遞區號應為3至6位數字"
