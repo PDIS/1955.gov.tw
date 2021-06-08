@@ -6,6 +6,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>  <title>e 化服務系統 : 個人網路申報及查詢作業</title>
   <title>e 化服務系統 : 個人網路申報及查詢作業</title>
   <style>
     html,
@@ -122,7 +123,7 @@
           <table border="0" class="text-reset">
             <tr>
               <td>姓名</td>
-              <td><input name="name" placeholder="測試測試">
+              <td><input name="name" placeholder="申辦人姓名">
                 <p />
               </td>
             </tr>
@@ -141,9 +142,9 @@
             <tr>
               <td>給付方式</td>
               <td>
-                <label><input type="radio" name="type" value="1" checked>金融機構</label> /
-                <label><input type="radio" name="type" value="2">郵局</label> /
-                <label><input type="radio" name="type" value="3">支票</label>
+                <label><input type="radio" name="type" value="1" checked>1金融機構</label> /
+                <label><input type="radio" name="type" value="2">2郵局</label> /
+                <label><input type="radio" name="type" value="3">3支票</label>
                 <p />
               </td>
             </tr>
@@ -204,16 +205,11 @@
               </td>
             </tr>
             <tr>
-              <td>申辦時間</td>
-              <td><input name="datetime" placeholder="20210607123000">
-                <p />
-              </td>
-            </tr>
-            <tr>
               <td></td>
               <td><input type="submit" value="送出申請"></td>
             </tr>
           </table>
+          <input name="datetime" type="hidden" placeholder="20210607123000">
         </form>
         </p>
         <p>
@@ -239,19 +235,59 @@
           style="color: #ff2020; text-decoration: underline;" target="_blank">此處</a>連結至說明專區）</div>
     </div>
   </div>
-
   <script>
-    document.querySelector("#apply input[name='name']").addEventListener("blur", (event) => {
-      if (!/.{0,20}/.test(event.target.value)) {
+    $(function () {
+      $("#apply").on("submit", (e) => {
+        e.preventDefault()
+        $("#apply input").blur()
+        if ($("#apply .invalid, #apply :invalid").length != 0) {
+          return alert("請檢查您的申辦資料")
+        }
+        let apply = {}
+        $("#apply input[name='datetime']").val(new Date().toISOString())
+        $("#apply").serializeArray().forEach(pair => { apply[pair.name] = pair.value })
+        if (confirm("請確認您的申辦資料：\n"
+          + `姓　　名: ${apply.name}\n`
+          + `出生日期: ${apply.birthday}\n`
+          + `身分證號: ${apply.id}\n`
+          + `給付方式: ${apply.type}\n`
+          + `金融機構代號: ${apply.branch}\n`
+          + `金融帳戶: ${apply.account}\n`
+          + `郵遞區號: ${apply.post}\n`
+          + `縣　　市: ${apply.city}\n`
+          + `鄉鎮市區: ${apply.district}\n`
+          + `地　　址: ${apply.address}\n`
+          + `行動電話: ${apply.mobile}\n`
+          + `市　　話: ${apply.phone}\n`
+          + `申辦時間: ${apply.datetime}\n`
+          + "\n是否繼續?")) {
+          $.post("https://datapost.1955.gov.tw/me/querystatus", $("#apply").serialize()).then(
+            data => {
+              if (data === "200 OK") {
+                alert("已收案，請待本局處理您的案件。")
+                $("#apply").trigger("reset")
+              } else {
+                alert("發生錯誤，請稍後再試。(1)")
+              }
+            },
+            () => alert("發生錯誤，請稍後再試。(2)")
+          )
+        }
+      })
+    })
+
+    $("#apply input[name='name']").on("blur", (event) => {
+      if (!/^.{1,20}$/.test(event.target.value)) {
         event.target.classList.add("invalid")
         event.target.nextElementSibling.innerText = "姓名應在20個字以內"
       } else {
         event.target.classList.remove("invalid")
         event.target.nextElementSibling.innerText = ""
       }
-    });
-    document.querySelector("#apply input[name='birthday']").addEventListener("blur", (event) => {
-      if (!/(18|19|20)[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])/.test(event.target.value)) {
+    })
+
+    $("#apply input[name='birthday']").on("blur", (event) => {
+      if (!/^(18|19|20)[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$/.test(event.target.value)) {
         event.target.classList.add("invalid")
         event.target.nextElementSibling.innerText = "生日須為西元年月日(yyyyMMdd)格式"
       } else {
@@ -259,8 +295,8 @@
         event.target.nextElementSibling.innerText = ""
       }
     });
-    document.querySelector("#apply input[name='id']").addEventListener("blur", (event) => {
-      if (/[A-Z][12][0-9]{8}/.test(event.target.value)) {
+    $("#apply input[name='id']").on("blur", (event) => {
+      if (!/^[A-Z][12][0-9]{8}$/.test(event.target.value)) {
         event.target.classList.add("invalid")
         event.target.nextElementSibling.innerText = "身份證字號格式錯誤"
       } else {
@@ -268,8 +304,8 @@
         event.target.nextElementSibling.innerText = ""
       }
     });
-    document.querySelector("#apply input[name='branch']").addEventListener("blur", (event) => {
-      if (/[0-9]{3}/.test(event.target.value)) {
+    $("#apply input[name='branch']").on("blur", (event) => {
+      if (!/^([0-9]{3})?$/.test(event.target.value)) {
         event.target.classList.add("invalid")
         event.target.nextElementSibling.innerText = "金融機構代號應為3位數字"
       } else {
@@ -277,8 +313,8 @@
         event.target.nextElementSibling.innerText = ""
       }
     });
-    document.querySelector("#apply input[name='account']").addEventListener("blur", (event) => {
-      if (/[0-9]{0,14}/.test(event.target.value)) {
+    $("#apply input[name='account']").on("blur", (event) => {
+      if (!/^[0-9]{0,14}$/.test(event.target.value)) {
         event.target.classList.add("invalid")
         event.target.nextElementSibling.innerText = "金融帳戶應為14位以內數字"
       } else {
@@ -286,8 +322,8 @@
         event.target.nextElementSibling.innerText = ""
       }
     });
-    document.querySelector("#apply input[name='post']").addEventListener("blur", (event) => {
-      if (/[0-9]{3,6}/.test(event.target.value)) {
+    $("#apply input[name='post']").on("blur", (event) => {
+      if (!/^[0-9]{3,6}$/.test(event.target.value)) {
         event.target.classList.add("invalid")
         event.target.nextElementSibling.innerText = "郵遞區號應為3至6位數字"
       } else {
@@ -295,8 +331,35 @@
         event.target.nextElementSibling.innerText = ""
       }
     });
-    document.querySelector("#apply input[name='mobile']").addEventListener("blur", (event) => {
-      if (/09[0-9]{8}/.test(event.target.value)) {
+    $("#apply input[name='city']").on("blur", (event) => {
+      if (!/^.+$/.test(event.target.value)) {
+        event.target.classList.add("invalid")
+        event.target.nextElementSibling.innerText = "此為必填欄位"
+      } else {
+        event.target.classList.remove("invalid")
+        event.target.nextElementSibling.innerText = ""
+      }
+    });
+    $("#apply input[name='district']").on("blur", (event) => {
+      if (!/^.+$/.test(event.target.value)) {
+        event.target.classList.add("invalid")
+        event.target.nextElementSibling.innerText = "此為必填欄位"
+      } else {
+        event.target.classList.remove("invalid")
+        event.target.nextElementSibling.innerText = ""
+      }
+    });
+    $("#apply input[name='address']").on("blur", (event) => {
+      if (!/^.+$/.test(event.target.value)) {
+        event.target.classList.add("invalid")
+        event.target.nextElementSibling.innerText = "此為必填欄位"
+      } else {
+        event.target.classList.remove("invalid")
+        event.target.nextElementSibling.innerText = ""
+      }
+    });
+    $("#apply input[name='mobile']").on("blur", (event) => {
+      if (!/^09[0-9]{8}$/.test(event.target.value)) {
         event.target.classList.add("invalid")
         event.target.nextElementSibling.innerText = "行動電話應為09開頭的10位數字"
       } else {
@@ -304,8 +367,8 @@
         event.target.nextElementSibling.innerText = ""
       }
     });
-    document.querySelector("#apply input[name='phone']").addEventListener("blur", (event) => {
-      if (/0[0-9]{0,9}/.test(event.target.value)) {
+    $("#apply input[name='phone']").on("blur", (event) => {
+      if (!/^(0[0-9]{5,9})?$/.test(event.target.value)) {
         event.target.classList.add("invalid")
         event.target.nextElementSibling.innerText = "市話應為包含區碼10位以內數字"
       } else {
