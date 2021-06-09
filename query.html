@@ -147,7 +147,7 @@
             </tr>
             <tr>
               <td>民國出生日期<span class="text-red text-small">*</span></td>
-              <td><input name="birthday" placeholder="069/01/01">
+              <td><input name="birthday" placeholder="0690101">
                 <p class="valid-hint" />
               </td>
             </tr>
@@ -224,7 +224,7 @@
         let apply = $("#apply").serializeArray().map(pair => {
           switch (pair.name) {
             case "birthday":
-              pair.value = moment(pair.value, "tYY/MM/DD").format("YYYYMMDD")
+              pair.value = moment(pair.value, "tYYMMDD").format("YYYYMMDD")
               return pair;
             default:
               return pair;
@@ -270,8 +270,8 @@
       })
 
       $("#apply input[name='birthday']").on("blur", (event) => {
-        if (!/^[0-9]{3}\/(0[1-9]|1[012])\/(0[1-9]|[12][0-9]|3[01])$/.test(event.target.value) || !moment(event.target.value, "tYY/MM/DD").isValid()) {
-          $(event.target).addClass("invalid").closest("td").find(".valid-hint").text("生日須為民國年月日(yyy/MM/dd)格式")
+        if (!/^[0-9]{3}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$/.test(event.target.value) || !moment(event.target.value, "tYYMMDD").isValid()) {
+          $(event.target).addClass("invalid").closest("td").find(".valid-hint").text("生日須為民國年月日(YYYMMDD)格式")
         } else {
           $(event.target).removeClass("invalid").closest("td").find(".valid-hint").empty()
         }
