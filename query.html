@@ -133,7 +133,7 @@
         <p>
           若您想要申辦生活補貼，請輸入下列資訊：
           <br>
-        <form id="apply" action="https://datapost.bli.gov.tw/me/subsidy/status" method="post">
+        <form id="apply" action="https://datapost.1955.gov.tw/me/querystatus" method="post">
           <table border="0">
             <tr>
               <td>姓名<span class="text-red text-small">*</span></td>
@@ -215,7 +215,7 @@
           return alert("請檢查您的資料")
 
         let apply = $("#apply").serializeArray().reduce((last, cur) => { last[cur.name] = cur.value; return last }, {})
-        $.ajax("https://datapost.bli.gov.tw/me/subsidy/status", {
+        $.ajax("https://datapost.1955.gov.tw/me/querystatus", {
           method: 'post',
           dataType: 'json',
           data: Object.keys(apply).map(key => key + "=" + encodeURIComponent(apply[key])).join("&")
