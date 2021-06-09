@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+
+<head>
+  <link rel="icon" href="data:,">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+    integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/platform/1.3.6/platform.min.js"
+    integrity="sha512-eYPrm8TgYWg3aa6tvSRZjN4v0Z9Qx69q3RhfSj+Mf89QqwOMqmwSlsVqfp4N8NVAcZe/YeUhh9x/nM2CAOp6cA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <title>e 化服務系統 : 個人網路申報及查詢作業</title>
+  <style>
+    html,
+    body {
+      margin: 0;
+      font-family: 微軟正黑體, "Microsoft JhengHei", Arial, Helvetica, sans-serif;
+      font-size: 18px;
+      line-height: 1.8;
+      background-color: #05866f;
+    }
+
+    .header {
+      background-color: #fff;
+      padding: .8rem;
+    }
+
+    .info-box {
+      background-color: #f3e65c;
+      padding: 1rem;
+      max-width: 1024px;
+      margin: auto;
+      margin-top: 3rem;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 1.8rem;
+      padding: 5px;
+      background-color: #FF7247;
+      color: #fff;
+      display: inline-block;
+      border: 1px solid #fff;
+      margin: 0;
+      margin-bottom: 1rem;
+    }
+
+    .logo {
+      display: inline-block;
+      max-width: 100%;
+    }
+
+    .links {
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .link {
+      font-size: 1.2rem;
+      display: inline-block;
+      background-color: #fff;
+      border: 1px solid #CCD1D9;
+      padding: 7px 15px;
+      margin: 1rem;
+      text-decoration: none;
+    }
+
+    .link:hover,
+    .link:focus {
+      color: #fff;
+      background-color: #c35118;
+
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .text-small {
+      font-size: small;
+    }
+
+    .text-red {
+      color: #ff2020;
+    }
+
+    .text-green {
+      color: #00ac00;
+    }
+
+    .text-blue {
+      color: #0059dd;
+    }
+
+    #apply table,
+    #apply table ul {
+      text-align: initial;
+      margin: 0 auto;
+    }
+
+    #apply td:first-child {
+      text-align: right;
+    }
+
+    .invalid {
+      border-color: #ff2020;
+      color: #ff2020;
+    }
+
+    .valid-hint {
+      font-size: small;
+      color: #ff2020;
+      margin: 0;
+    }
+
+    .valid-hint:empty {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <img class="logo" src="https://www.1955.gov.tw/logo.svg" alt="勞工保險局logo">
+  </div>
+  <div class="info-box">
+    <div class="container">
+      <div class="text-center">
+
+        <p>
+          若您想要申辦生活補貼，請輸入下列資訊：
+          <br>
+        <form id="apply" action="https://datapost.bli.gov.tw/me/subsidy/status" method="post">
+          <table border="0">
+            <tr>
+              <td>姓名<span class="text-red text-small">*</span></td>
+              <td><input name="name" placeholder="申辦人姓名">
+                <p class="valid-hint" />
+              </td>
+            </tr>
+            <tr>
+              <td>出生日期<span class="text-red text-small">*</span></td>
+              <td><input name="birthday" placeholder="19710101">
+                <p class="valid-hint" />
+              </td>
+            </tr>
+            <tr>
+              <td>身分證號<span class="text-red text-small">*</span></td>
+              <td><input name="id" placeholder="B100000000">
+                <p class="valid-hint" />
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+              <td><input type="submit" value="送出查詢"></td>
+            </tr>
+          </table>
+        </form>
+        </p>
+        <div style="display: none" class="msg msg1">
+          <h3 class="text-red">您不符合資格。</h3>
+          <p>※ 不符110年⽣活補貼資格條件之可能情形如下：</p>
+          <ul>
+            <li>不具中華⺠國國籍。</li>
+            <li>⾮於職業⼯會參加勞⼯保險。</li>
+            <li>110年4⽉30⽇當⽇未參加勞⼯保險。</li>
+            <li>108年度個⼈各類所得總額⾼於40萬8千元。</li>
+            <li>已請領其他機關相同性質之補助、補貼或津貼。</li>
+          </ul>
+          <p>如有疑義，請洽本局電話022396l266轉分機5555，將有專⼈為您服</p>
+        </div>
+        <div style="display: none" class="msg msg2">
+          <p class="text-blue">您符合資格，但尚未登錄帳號。</p>
+          <p>若要登錄帳號，請備妥健保卡號及戶號，連結⾄網址 <a
+              href="https://edesk.1955.gov.tw/na/na_gsp_login.jsp">https://edesk.1955.gov.tw/na/na_gsp_login.jsp</a>
+            (系統忙錄時，等候時間較⻑，敬請⾒諒。</p>
+        </div>
+        <div style="display: none" class="msg msg3">
+          <p class="text-green">您符合資格，且已登錄帳號，無須再次登⼊。</p>
+        </div>
+        <div style="display: none" class="msg msg4">
+          <p class="text-red">資料異常，請洽本局電話02-23961266轉分機3400，將有專⼈為您服務。</p>
+        </div>
+        <p>
+          若您想查詢申辦狀態，並請您先準備好您的<span class="text-red">健保卡卡號</span>及<span class="text-red">戶口名簿戶號</span>，稍後登入時將會用到。
+        </p>
+        <p id="desktop">
+          （如果您有<span class="text-red">自然人憑證</span>及<span class="text-red">讀卡機</span>，請<a
+            href="https://edesk.bli.gov.tw/na/">按此登入</a>。）
+        </p>
+      </div>
+      <hr>
+      <div>
+        <h2>110年「自營作業者或無一定雇主之勞工生活補貼」</h2>
+        <strong>適用對象：</strong>具中華民國國籍之自營作業者或無一定雇主之勞工，且同時符合下列條件：
+      </div>
+      <ul style="list-style: none; padding: 0;">
+        <li>1. 由職業工會參加勞工保險。</li>
+        <li>2. 110年4月30日已參加勞工保險。</li>
+        <li>3. 108年個人各類所得總額未達新臺幣40萬8千元。</li>
+        <li>4. 未請領其他機關所定性質相同之補助、補貼或津貼。</li>
+      </ul>
+      <div>（如欲瞭解其他相關資訊，請點選<a href="https://www.1955.gov.tw/0105444.html"
+          style="color: #ff2020; text-decoration: underline;" target="_blank">此處</a>連結至說明專區）</div>
+    </div>
+  </div>
+  <script>
+    $(function () {
+      $("#apply").on("submit", (event) => {
+        event.preventDefault()
+        if ($("#apply input").trigger("blur").filter(".invalid").length != 0)
+          return alert("請檢查您的資料")
+
+        let apply = $("#apply").serializeArray().reduce((last, cur) => { last[cur.name] = cur.value; return last }, {})
+        $.ajax("https://datapost.bli.gov.tw/me/subsidy/status", {
+          method: 'post',
+          dataType: 'json',
+          data: Object.keys(apply).map(key => key + "=" + encodeURIComponent(apply[key])).join("&")
+          // data: JSON.stringify(apply)
+        }).then(data => {
+          switch (data.statusCode) {
+            case "01":
+              $(".msg1").show().siblings(".msg").hide(); break
+              case "02":
+              $(".msg2").show().siblings(".msg").hide(); break
+              case "03":
+              $(".msg3").show().siblings(".msg").hide(); break
+              case "04":
+              $(".msg4").show().siblings(".msg").hide(); break
+            case "96":
+              alert("請填寫「⾝分證字號」欄位。"); break
+            case "97":
+              alert("請填寫「姓名」欄位。"); break
+            case "98":
+              alert("請填寫「出生年⽉⽇」欄位。"); break
+            case "99":
+              alert("系統忙錄中，請稍等。"); break
+            default:
+              alert("發生錯誤，請稍後再試。(1)"); break
+          }
+        }).catch(err => {
+          alert("發生錯誤，請稍後再試。(2)")
+        })
+      })
+
+      $("#apply input[name='name']").on("blur", (event) => {
+        if (!/^.{1,20}$/.test(event.target.value)) {
+          $(event.target).addClass("invalid").closest("td").find(".valid-hint").text("姓名應在20個字以內")
+        } else {
+          $(event.target).removeClass("invalid").closest("td").find(".valid-hint").empty()
+        }
+      })
+
+      $("#apply input[name='birthday']").on("blur", (event) => {
+        if (!/^(18|19|20)[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$/.test(event.target.value)) {
+          $(event.target).addClass("invalid").closest("td").find(".valid-hint").text("生日須為西元年月日(yyyyMMdd)格式")
+        } else {
+          $(event.target).removeClass("invalid").closest("td").find(".valid-hint").empty()
+        }
+      })
+
+      $("#apply input[name='id']").on("blur", (event) => {
+        if (!/^[A-Z][12][0-9]{8}$/.test(event.target.value)) {
+          $(event.target).addClass("invalid").closest("td").find(".valid-hint").text("身份證字號格式錯誤")
+        } else {
+          $(event.target).removeClass("invalid").closest("td").find(".valid-hint").empty()
+        }
+      })
+    })
+  </script>
+
+  <script>
+    var date = new Date();
+    var clientUserAgent = navigator.userAgent;
+    var clientInfo = platform.parse(clientUserAgent);
+    if (!(clientInfo.os.family.match(/Windows/) || clientInfo.os.family.match(/OS X/))) {
+      document.getElementById(
+        'desktop'
+      ).innerText = '（如果您有自然人憑證及讀卡機，可從電腦快速登入）';
+    }
+  </script>
+</body>
+
+</html>
