@@ -6,12 +6,10 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
-    integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/platform/1.3.6/platform.min.js"
-    integrity="sha512-eYPrm8TgYWg3aa6tvSRZjN4v0Z9Qx69q3RhfSj+Mf89QqwOMqmwSlsVqfp4N8NVAcZe/YeUhh9x/nM2CAOp6cA=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/platform@1.3.6/platform.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/moment-taiwan@0.0.4/target/moment-taiwan.min.js"></script>
   <title>e 化服務系統 : 個人網路申報及查詢作業</title>
   <style>
     html,
@@ -148,8 +146,8 @@
               </td>
             </tr>
             <tr>
-              <td>出生日期<span class="text-red text-small">*</span></td>
-              <td><input name="birthday" placeholder="19710101">
+              <td>民國出生日期<span class="text-red text-small">*</span></td>
+              <td><input name="birthday" placeholder="069/01/01">
                 <p class="valid-hint" />
               </td>
             </tr>
@@ -223,7 +221,15 @@
         $(".msg").hide()
         $("#apply input[type=submit]").prop("disabled", true)
 
-        let apply = $("#apply").serializeArray().reduce((last, cur) => { last[cur.name] = cur.value; return last }, {})
+        let apply = $("#apply").serializeArray().map(pair => {
+          switch (pair.name) {
+            case "birthday":
+              pair.value = moment(pair.value, "tYY/MM/DD").format("YYYYMMDD")
+              return pair;
+            default:
+              return pair;
+          }
+        }).reduce((last, pair) => { last[pair.name] = pair.value; return last }, {})
         $.ajax("https://datapost.1955.gov.tw/me/querystatus", {
           method: 'post',
           dataType: 'json',
@@ -264,8 +270,8 @@
       })
 
       $("#apply input[name='birthday']").on("blur", (event) => {
-        if (!/^(18|19|20)[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$/.test(event.target.value)) {
-          $(event.target).addClass("invalid").closest("td").find(".valid-hint").text("生日須為西元年月日(yyyyMMdd)格式")
+        if (!/^[0-9]{3}\/(0[1-9]|1[012])\/(0[1-9]|[12][0-9]|3[01])$/.test(event.target.value) || !moment(event.target.value, "tYY/MM/DD").isValid()) {
+          $(event.target).addClass("invalid").closest("td").find(".valid-hint").text("生日須為民國年月日(yyy/MM/dd)格式")
         } else {
           $(event.target).removeClass("invalid").closest("td").find(".valid-hint").empty()
         }
