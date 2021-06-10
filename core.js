@@ -26,12 +26,20 @@ $(function () {
   })
 
   $("#apply input[name='type']").on("change", (event) => {
+    switch ($("#apply input[name='type']:checked").val()) {
+      case "1":
+        $("#apply input[name='branch'], #apply select[name='branch']"); break
+      case "2":
+        $("#apply input[name='branch'], #apply select[name='branch']").val('700'); break
+      default:
+        break;
+    }
     $("#apply input[name='branch'], #apply input[name='account']").blur()
   })
 
   // 選單
   $("#apply select[name='branch']").on("change", (event) => {
-
+    // stub
   })
 
   // 自行輸入
@@ -61,7 +69,7 @@ $(function () {
 
   // 選單
   $("#apply select[name='city']").on("change", (event) => {
-
+    // stub
   })
 
   // 自行輸入
@@ -75,7 +83,7 @@ $(function () {
 
   // 選單
   $("#apply select[name='district']").on("change", (event) => {
-
+    // stub
   })
 
   // 自行輸入
@@ -115,3 +123,42 @@ $(function () {
     $(event.target).val(new Date().toISOString())
   })
 })
+
+/**
+ * @typedef {Object} MeResponse 紓困補貼執行結果
+ * @property {string} statusCode 狀態代碼
+ * @property {string} message    執行結果訊息
+ */
+/**
+ * @param {MeResponse} data 紓困補貼執行結果回應
+ */
+function resolveStatus(data) {
+  switch (data.statusCode) {
+    case "01": $(".msg1").show().siblings(".msg").hide(); break
+    case "02": $(".msg2").show().siblings(".msg").hide(); window.location.href = "post.html"; break
+    case "03": $(".msg3").show().siblings(".msg").hide(); break
+    case "04": $(".msg4").show().siblings(".msg").hide(); break
+    case "05": alert("紓困給付申請完成"); break
+    case "81": alert("「市話」欄位應為包含區碼10位以內數字。"); break
+    case "82": alert("「⾏動電話」欄位應為09開頭的10位數字。"); break
+    case "83": alert("「郵遞區號」欄位應為3⾄6位數字。"); break
+    case "84": alert("「⾦融帳⼾」欄位應為14位以內數字。"); break
+    case "85": alert("「⾦融機構代號」欄位應為3位數字。"); break
+    case "86": alert("「⾝份證字號」欄位格式錯誤。"); break
+    case "87": alert("「⽣⽇」欄位為⺠國年⽉⽇(yyyMMdd)格式。"); break
+    case "88": alert("「姓名」欄位應在20個字以內。"); break
+    case "89": alert("請填寫「⾏動電話」欄位。"); break
+    case "90": alert("請填寫「地址」欄位。"); break
+    case "91": alert("請選擇「鄉鎮市區」欄位。"); break
+    case "92": alert("請選擇「縣市」欄位。"); break
+    case "93": alert("請填寫「郵遞區號」欄位。"); break
+    case "94": alert("請填寫「⾦融帳⼾」欄位。"); break
+    case "95": alert("請填寫「⾦融機構代號」欄位。"); break
+    case "96": alert("請填寫「⾝分證字號」欄位。"); break
+    case "97": alert("請填寫「姓名」欄位。"); break
+    case "98": alert("請填寫「出生年⽉⽇」欄位。"); break
+    case "99": alert("系統忙錄中，請稍後再試。"); break
+    default: alert("發生錯誤，請稍後再試。(1)"); break
+  }
+
+}
