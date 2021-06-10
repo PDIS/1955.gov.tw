@@ -1,0 +1,111 @@
+html,
+body {
+  margin: 0;
+  font-family: 微軟正黑體, "Microsoft JhengHei", Arial, Helvetica, sans-serif;
+  font-size: 18px;
+  line-height: 1.8;
+  background-color: #05866f;
+}
+
+.header {
+  background-color: #fff;
+  padding: .8rem;
+}
+
+.info-box {
+  background-color: #f3e65c;
+  padding: 1rem;
+  max-width: 1024px;
+  margin: auto;
+  margin-top: 3rem;
+}
+
+h1 {
+  text-align: center;
+  font-size: 1.8rem;
+  padding: 5px;
+  background-color: #FF7247;
+  color: #fff;
+  display: inline-block;
+  border: 1px solid #fff;
+  margin: 0;
+  margin-bottom: 1rem;
+}
+
+.logo {
+  display: inline-block;
+  max-width: 100%;
+}
+
+.links {
+  padding: 1rem;
+  text-align: center;
+}
+
+.link {
+  font-size: 1.2rem;
+  display: inline-block;
+  background-color: #fff;
+  border: 1px solid #CCD1D9;
+  padding: 7px 15px;
+  margin: 1rem;
+  text-decoration: none;
+}
+
+.link:hover,
+.link:focus {
+  color: #fff;
+  background-color: #c35118;
+
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-small {
+  font-size: small;
+}
+
+.text-red {
+  color: #ff2020;
+}
+
+.text-green {
+  color: #00ac00;
+}
+
+.text-blue {
+  color: #0059dd;
+}
+
+#apply table,
+#apply table ul {
+  text-align: initial;
+  margin: 0 auto;
+}
+
+#apply td:first-child {
+  text-align: right;
+}
+
+.invalid {
+  border-color: #ff2020;
+  color: #ff2020;
+}
+
+.valid-hint {
+  font-size: small;
+  color: #ff2020;
+  margin: 0;
+}
+
+.valid-hint:empty {
+  display: none;
+}
+
+.msg ul {
+  text-align: initial;
+  margin: auto;
+  width: fit-content;
+}

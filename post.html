@@ -2,16 +2,11 @@
 <html lang="zh-tw">
 
 <head>
+  <link rel="stylesheet" href="style.css">
   <link rel="icon" href="data:,">
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
-    integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/platform/1.3.6/platform.min.js"
-    integrity="sha512-eYPrm8TgYWg3aa6tvSRZjN4v0Z9Qx69q3RhfSj+Mf89QqwOMqmwSlsVqfp4N8NVAcZe/YeUhh9x/nM2CAOp6cA=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <title>e 化服務系統 : 個人網路申報及查詢作業</title>
   <style>
     html,
@@ -35,81 +30,6 @@
       margin: auto;
       margin-top: 3rem;
     }
-
-    h1 {
-      text-align: center;
-      font-size: 1.8rem;
-      padding: 5px;
-      background-color: #FF7247;
-      color: #fff;
-      display: inline-block;
-      border: 1px solid #fff;
-      margin: 0;
-      margin-bottom: 1rem;
-    }
-
-    .logo {
-      display: inline-block;
-      max-width: 100%;
-    }
-
-    .links {
-      padding: 1rem;
-      text-align: center;
-    }
-
-    .link {
-      font-size: 1.2rem;
-      display: inline-block;
-      background-color: #fff;
-      border: 1px solid #CCD1D9;
-      padding: 7px 15px;
-      margin: 1rem;
-      text-decoration: none;
-    }
-
-    .link:hover,
-    .link:focus {
-      color: #fff;
-      background-color: #c35118;
-
-    }
-
-    .text-center {
-      text-align: center;
-    }
-
-    .text-small {
-      font-size: small;
-    }
-
-    .text-red {
-      color: #ff2020;
-    }
-
-    #apply table, #apply table ul {
-      text-align: initial;
-      margin: 0 auto;
-    }
-
-    #apply td:first-child {
-      text-align: right;
-    }
-
-    .invalid {
-      border-color: #ff2020;
-      color: #ff2020;
-    }
-
-    .valid-hint {
-      font-size: small;
-      color: #ff2020;
-      margin: 0;
-    }
-
-    .valid-hint:empty {
-      display: none;
-    }
   </style>
 </head>
 
@@ -120,21 +40,21 @@
   <div class="info-box">
     <div class="container">
       <div class="text-center">
-
+        <h3 class="text-blue">您符合資格，但尚未登錄帳號。</h3>
         <p>
           若您想要申辦生活補貼，請輸入下列資訊：
           <br>
-        <form id="apply" action="https://datapost.1955.gov.tw/me/querystatus" method="post">
+        <form id="apply">
           <table border="0">
             <tr>
               <td>姓名<span class="text-red text-small">*</span></td>
-              <td><input name="name" placeholder="申辦人姓名">
+              <td><input name="name" type="text" placeholder="申辦人姓名">
                 <p class="valid-hint" />
               </td>
             </tr>
             <tr>
               <td>出生日期<span class="text-red text-small">*</span></td>
-              <td><input name="birthday" placeholder="19710101">
+              <td><input name="birthday" placeholder="0690101">
                 <p class="valid-hint" />
               </td>
             </tr>
@@ -148,8 +68,7 @@
               <td>給付方式<span class="text-red text-small">*</span></td>
               <td>
                 <label><input type="radio" name="type" value="1" checked>1金融機構</label> /
-                <label><input type="radio" name="type" value="2">2郵局</label> /
-                <label><input type="radio" name="type" value="3">3支票</label>
+                <label><input type="radio" name="type" value="2">2郵局</label>
                 <p class="valid-hint" />
               </td>
             </tr>
@@ -157,7 +76,6 @@
               <td colspan="2" class="text-small">
                 <ul>
                   <li>請確實填寫「本人」帳戶以免無法入帳，公司、外幣或黃金帳戶亦無法入帳。</li>
-                  <li>「支票」僅限特殊情況無法提供帳戶者，惟所需作業時間較長，且無法即時入帳。</li>
                 </ul>
               </td>
             </tr>
@@ -240,6 +158,11 @@
           style="color: #ff2020; text-decoration: underline;" target="_blank">此處</a>連結至說明專區）</div>
     </div>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/platform@1.3.6/platform.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/moment-taiwan@0.0.4/target/moment-taiwan.min.js"></script>
+  <script src="core.js"></script>
   <script>
     $(function () {
       $("#apply").on("submit", (event) => {
@@ -247,7 +170,15 @@
         if ($("#apply input").trigger("blur").filter(".invalid").length != 0)
           return alert("請檢查您的申辦資料")
 
-        let apply = $("#apply").serializeArray().reduce((last, cur) => { last[cur.name] = cur.value; return last }, {})
+        let apply = $("#apply").serializeArray().map(pair => {
+          switch (pair.name) {
+            case "birthday":
+              pair.value = moment(pair.value, "tYYMMDD").format("YYYYMMDD")
+              return pair;
+            default:
+              return pair;
+          }
+        }).reduce((last, pair) => { last[pair.name] = pair.value; return last }, {})
         if (confirm("請確認您的申辦資料：\n"
           + `姓　　名: ${apply.name}\n`
           + `出生日期: ${apply.birthday}\n`
@@ -263,7 +194,7 @@
           + `市　　話: ${apply.phone}\n`
           + `申辦時間: ${apply.datetime}\n`
           + "\n是否繼續?")) {
-          $.ajax("https://datapost.1955.gov.tw/me/querystatus", {
+          $.ajax("https://datapost.1955.gov.tw/me/applyData", {
             method: 'post',
             data: Object.keys(apply).map(key => key + "=" + encodeURIComponent(apply[key])).join("&")
             // data: JSON.stringify(apply)
@@ -278,102 +209,6 @@
             alert("發生錯誤，請稍後再試。(2)")
           })
         }
-      })
-
-      $("#apply input[name='name']").on("blur", (event) => {
-        if (!/^.{1,20}$/.test(event.target.value)) {
-          $(event.target).addClass("invalid").closest("td").find(".valid-hint").text("姓名應在20個字以內")
-        } else {
-          $(event.target).removeClass("invalid").closest("td").find(".valid-hint").empty()
-        }
-      })
-
-      $("#apply input[name='birthday']").on("blur", (event) => {
-        if (!/^(18|19|20)[0-9]{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$/.test(event.target.value)) {
-          $(event.target).addClass("invalid").closest("td").find(".valid-hint").text("生日須為西元年月日(yyyyMMdd)格式")
-        } else {
-          $(event.target).removeClass("invalid").closest("td").find(".valid-hint").empty()
-        }
-      })
-
-      $("#apply input[name='id']").on("blur", (event) => {
-        if (!/^[A-Z][12][0-9]{8}$/.test(event.target.value)) {
-          $(event.target).addClass("invalid").closest("td").find(".valid-hint").text("身份證字號格式錯誤")
-        } else {
-          $(event.target).removeClass("invalid").closest("td").find(".valid-hint").empty()
-        }
-      })
-
-      $("#apply input[name='type']").on("change", (event) => {
-        $("#apply input[name='branch'], #apply input[name='account']").blur()
-      })
-
-      $("#apply input[name='branch']").on("blur", (event) => {
-        if ($("#apply input[name='type']:checked").val() !== "3" && !/^[0-9]{3}$/.test(event.target.value)) {
-          $(event.target).addClass("invalid").closest("td").find(".valid-hint").text("金融機構代號應為3位數字")
-        } else {
-          $(event.target).removeClass("invalid").closest("td").find(".valid-hint").empty()
-        }
-      })
-
-      $("#apply input[name='account']").on("blur", (event) => {
-        if ($("#apply input[name='type']:checked").val() !== "3" && !/^[0-9]{8,14}$/.test(event.target.value)) {
-          $(event.target).addClass("invalid").closest("td").find(".valid-hint").text("金融帳戶應為14位以內數字")
-        } else {
-          $(event.target).removeClass("invalid").closest("td").find(".valid-hint").empty()
-        }
-      })
-
-      $("#apply input[name='post']").on("blur", (event) => {
-        if (!/^[0-9]{3,6}$/.test(event.target.value)) {
-          $(event.target).addClass("invalid").closest("td").find(".valid-hint").text("郵遞區號應為3至6位數字")
-        } else {
-          $(event.target).removeClass("invalid").closest("td").find(".valid-hint").empty()
-        }
-      })
-
-      $("#apply input[name='city']").on("blur", (event) => {
-        if (!/^.+$/.test(event.target.value)) {
-          $(event.target).addClass("invalid").closest("td").find(".valid-hint").text("此為必填欄位")
-        } else {
-          $(event.target).removeClass("invalid").closest("td").find(".valid-hint").empty()
-        }
-      })
-
-      $("#apply input[name='district']").on("blur", (event) => {
-        if (!/^.+$/.test(event.target.value)) {
-          $(event.target).addClass("invalid").closest("td").find(".valid-hint").text("此為必填欄位")
-        } else {
-          $(event.target).removeClass("invalid").closest("td").find(".valid-hint").empty()
-        }
-      })
-
-      $("#apply input[name='address']").on("blur", (event) => {
-        if (!/^.+$/.test(event.target.value)) {
-          $(event.target).addClass("invalid").closest("td").find(".valid-hint").text("此為必填欄位")
-        } else {
-          $(event.target).removeClass("invalid").closest("td").find(".valid-hint").empty()
-        }
-      })
-
-      $("#apply input[name='mobile']").on("blur", (event) => {
-        if (!/^09[0-9]{8}$/.test(event.target.value)) {
-          $(event.target).addClass("invalid").closest("td").find(".valid-hint").text("行動電話應為09開頭的10位數字")
-        } else {
-          $(event.target).removeClass("invalid").closest("td").find(".valid-hint").empty()
-        }
-      })
-
-      $("#apply input[name='phone']").on("blur", (event) => {
-        if (!/^(0[0-9]{5,9})?$/.test(event.target.value)) {
-          $(event.target).addClass("invalid").closest("td").find(".valid-hint").text("市話應為包含區碼10位以內數字")
-        } else {
-          $(event.target).removeClass("invalid").closest("td").find(".valid-hint").empty()
-        }
-      })
-
-      $("#apply input[name='datetime']").on("blur", (event) => {
-        $(event.target).val(new Date().toISOString())
       })
     })
   </script>
