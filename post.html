@@ -81,7 +81,8 @@
             </tr>
             <tr>
               <td>金融機構代號</td>
-              <td><input name="branch" placeholder="700">
+              <td>
+                <select name="branch" class="bank"></select>
                 <p class="valid-hint" />
               </td>
             </tr>
@@ -99,13 +100,20 @@
             </tr>
             <tr>
               <td>縣市<span class="text-red text-small">*</span></td>
-              <td><input name="city" placeholder="台北市">
+              <td>
+                <select name="city" class="address city">
+                  <option value="台北市">台北市</option>
+                  <option value="新北市">新北市</option>
+                  <option value="基隆市">基隆市</option>
+                </select>
                 <p class="valid-hint" />
               </td>
             </tr>
             <tr>
               <td>鄉鎮市區<span class="text-red text-small">*</span></td>
-              <td><input name="district" placeholder="中正區">
+              <td>
+                <select name="district" class="address district">
+                </select>
                 <p class="valid-hint" />
               </td>
             </tr>
@@ -163,6 +171,8 @@
   <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/moment-taiwan@0.0.4/target/moment-taiwan.min.js"></script>
   <script src="core.js"></script>
+  <script src="bank.js"></script>
+  <script src="post.js"></script>
   <script>
     $(function () {
       $("#apply").on("submit", (event) => {
@@ -210,6 +220,24 @@
           })
         }
       })
+      $("select.bank")
+        .empty()
+        .append(Object.keys(bankOpts).map(key => $("<option>").attr("value", key).text(`${key} ${bankOpts[key]}`)))
+      $("select.address.district")
+        .on("change", (event) => {
+          $("#apply input[name='post']").val($("select.address.district :selected").data("zip"))
+        })
+      $("select.address.city")
+        .empty()
+        .append(Object.keys(postOpts).map(key => $("<option>").attr("value", key).text(key)))
+        .on("change", (event) => {
+          let city = $("select.address.city :selected").val()
+          $("select.address.district")
+            .empty()
+            .append(Object.keys(postOpts[city]).map(key => $("<option>").attr("value", postOpts[city][key]).data("zip", key).text(`${key} ${postOpts[city][key]}`)))
+            .trigger("change")
+        })
+        .trigger("change")
     })
   </script>
 
