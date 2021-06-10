@@ -226,24 +226,54 @@
           })
         }
       })
-      $("select.bank")
-        .empty()
-        .append(Object.keys(bankOpts).map(key => $("<option>").attr("value", key).text(`${key} ${bankOpts[key]}`)))
-      $("select.address.district")
-        .on("change", (event) => {
-          $("#apply input[name='post']").val($("select.address.district :selected").data("zip"))
+
+      $("#apply select[name='branch']")
+        .on("1955#refresh", function (event) {
+          switch ($("#apply input[name='type']:checked").val()) {
+            case "1":
+              $(this).empty().append(Object.keys(bankOpts).filter(key => key !== "700").map(key => $("<option>").attr("value", key).text(`${key} ${bankOpts[key]}`)))
+              break
+            case "2":
+              $(this).empty().append(Object.keys(bankOpts).filter(key => key === "700").map(key => $("<option>").attr("value", key).text(`${key} ${bankOpts[key]}`)))
+              break
+            default:
+              $(this).empty()
+              break;
+          }
         })
-      $("select.address.city")
-        .empty()
-        .append(Object.keys(postOpts).map(key => $("<option>").attr("value", key).text(key)))
-        .on("change", (event) => {
-          let city = $("select.address.city :selected").val()
-          $("select.address.district")
+
+      $("#apply input[name='type']").on("change", function (event) {
+        $("#apply select[name='branch']").trigger("1955#refresh")
+      })
+
+
+      $("#apply select[name='city']")
+        .on("1955#refresh", function (event) {
+          $(this)
+            .empty()
+            .append(Object.keys(postOpts).map(key => $("<option>").attr("value", key).text(key)))
+            .trigger("change")
+        })
+        .on("change", function (event) {
+          $("#apply select[name='district']")
+            .trigger("1955#refresh")
+        })
+
+      $("#apply select[name='district']")
+        .on("1955#refresh", function (event) {
+          let city = $("#apply select[name='city']").find(":selected").val()
+          $(this)
             .empty()
             .append(Object.keys(postOpts[city]).map(key => $("<option>").attr("value", postOpts[city][key]).data("zip", key).text(`${key} ${postOpts[city][key]}`)))
             .trigger("change")
         })
-        .trigger("change")
+        .on("change", function (event) {
+          $("#apply input[name='post']")
+            .val($(event.target).find(":selected").data("zip"))
+            .trigger("change")
+        })
+
+      $("#apply select[name='city'], #apply select[name='branch']").trigger("1955#refresh")
     })
   </script>
 

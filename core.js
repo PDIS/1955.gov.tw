@@ -33,14 +33,6 @@ $(function () {
   })
 
   $("#apply input[name='type']").on("change", (event) => {
-    switch ($("#apply input[name='type']:checked").val()) {
-      case "1":
-        $("#apply input[name='branch'], #apply select[name='branch']"); break
-      case "2":
-        $("#apply input[name='branch'], #apply select[name='branch']").val('700'); break
-      default:
-        break;
-    }
     $("#apply input[name='branch'], #apply input[name='account']").blur()
   })
 
