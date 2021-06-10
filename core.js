@@ -1,11 +1,16 @@
 
 // 表單欄位驗證
 $(function () {
+  $("#apply input[name='name']").val(sessionStorage.getItem("apply.name"))
+  $("#apply input[name='birthday']").val(sessionStorage.getItem("apply.birthday"))
+  $("#apply input[name='id']").val(sessionStorage.getItem("apply.id"))
+
   $("#apply input[name='name']").on("blur", (event) => {
     if (!/^.{1,20}$/.test(event.target.value)) {
       $(event.target).addClass("invalid").closest("td").find(".valid-hint").text("姓名應在20個字以內")
     } else {
       $(event.target).removeClass("invalid").closest("td").find(".valid-hint").empty()
+      sessionStorage.setItem("apply.name", event.target.value)
     }
   })
 
@@ -14,6 +19,7 @@ $(function () {
       $(event.target).addClass("invalid").closest("td").find(".valid-hint").text("生日須為民國年月日(YYYMMDD)格式")
     } else {
       $(event.target).removeClass("invalid").closest("td").find(".valid-hint").empty()
+      sessionStorage.setItem("apply.birthday", event.target.value)
     }
   })
 
@@ -22,6 +28,7 @@ $(function () {
       $(event.target).addClass("invalid").closest("td").find(".valid-hint").text("身份證字號格式錯誤")
     } else {
       $(event.target).removeClass("invalid").closest("td").find(".valid-hint").empty()
+      sessionStorage.setItem("apply.id", event.target.value)
     }
   })
 
