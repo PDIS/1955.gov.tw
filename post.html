@@ -48,19 +48,19 @@
           <table border="0">
             <tr>
               <td>姓名<span class="text-red text-small">*</span></td>
-              <td><input name="name" type="text" placeholder="申辦人姓名">
+              <td><input name="name" type="text" placeholder="申辦人姓名" readonly>
                 <p class="valid-hint" />
               </td>
             </tr>
             <tr>
               <td>出生日期<span class="text-red text-small">*</span></td>
-              <td><input name="birthday" placeholder="0690101">
+              <td><input name="birthday" placeholder="0690101" readonly>
                 <p class="valid-hint" />
               </td>
             </tr>
             <tr>
               <td>身分證號<span class="text-red text-small">*</span></td>
-              <td><input name="id" placeholder="B100000000">
+              <td><input name="id" placeholder="B100000000" readonly>
                 <p class="valid-hint" />
               </td>
             </tr>
@@ -276,6 +276,10 @@
             .val($(event.target).find(":selected").data("zip"))
             .trigger("change")
         })
+
+      if (!sessionStorage.getItem("apply.name") || !sessionStorage.getItem("apply.birthday") || !sessionStorage.getItem("apply.id")) {
+        window.location.href = "query.html"
+      }
 
       $("#apply select[name='city'], #apply select[name='branch']").trigger("1955#refresh")
     })
