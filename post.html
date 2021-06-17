@@ -268,7 +268,7 @@
           let city = $("#apply select[name='city']").find(":selected").val()
           $(this)
             .empty()
-            .append(Object.keys(postOpts[city]).map(key => $("<option>").attr("value", postOpts[city][key]).data("zip", key).text(`${key} ${postOpts[city][key]}`)))
+            .append(Object.keys(postOpts[city]).map(key => $("<option>").attr("value", key).data("zip", postOpts[city][key]).text(`${postOpts[city][key]} ${key}`)))
             .trigger("change")
         })
         .on("change", function (event) {

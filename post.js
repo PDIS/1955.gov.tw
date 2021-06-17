@@ -2210,6 +2210,6 @@ var postOpts = [
     }
 ].reduce((last, pair) => {
     last[pair.CNAME] = (!!last[pair.CNAME] ? last[pair.CNAME] : {})
-    last[pair.CNAME][pair.ZIP] = !!last[pair.CNAME][pair.ZIP] ? `${last[pair.CNAME][pair.ZIP]}, ${pair.AREASNM}` : pair.AREASNM
+    last[pair.CNAME][pair.AREASNM] = !!last[pair.CNAME][pair.AREASNM] ? `${last[pair.CNAME][pair.AREASNM]}, ${pair.ZIP}` : pair.ZIP
     return last
 }, {})
