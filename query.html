@@ -59,7 +59,7 @@
               </td>
             </tr>
             <tr>
-              <td>身分證號<span class="text-red text-small">*</span></td>
+              <td>身分證號/居留證號<span class="text-red text-small">*</span></td>
               <td><input name="id" placeholder="B100000000">
                 <p class="valid-hint" />
               </td>
@@ -72,13 +72,13 @@
         </form>
         </p>
         <div style="display: none" class="msg msg1">
-          <h3 class="text-red">您不符合資格。</h3>
+          <h3 id="resultTitle" class="text-red">您不符合資格。</h3>
           <p>※ 不符110年⽣活補貼資格條件之可能情形如下：</p>
           <ul>
-            <li>不具中華⺠國國籍。</li>
+            <li>不具中華⺠國國籍或未持有中華民國發給之永久居留證。</li>
             <li>⾮於職業⼯會參加勞⼯保險。</li>
             <li>110年4⽉30⽇當⽇未參加勞⼯保險。</li>
-            <li>108年度個⼈各類所得總額⾼於40萬8千元。</li>
+            <li>108年及109年個人各類所得總額高於40萬8千元。</li>
             <li>已請領其他機關相同性質之補助、補貼或津貼。</li>
           </ul>
           <p>如有疑義，請洽本局電話02-23961266轉分機5555，將有專⼈為您服務。</p>
@@ -107,12 +107,12 @@
       <hr>
       <div>
         <h2>110年「自營作業者或無一定雇主之勞工生活補貼」</h2>
-        <strong>適用對象：</strong>具中華民國國籍之自營作業者或無一定雇主之勞工，且同時符合下列條件：
+        <strong>適用對象：</strong>具中華民國國籍或持有中華民國發給永久居留證之自營作業者或無一定雇主之勞工，且同時符合下列條件：
       </div>
       <ul style="list-style: none; padding: 0;">
         <li>1. 由職業工會參加勞工保險。</li>
         <li>2. 110年4月30日已參加勞工保險。</li>
-        <li>3. 108年個人各類所得總額未達新臺幣40萬8千元。</li>
+        <li>3. 108年或109年個人各類所得總額未達新臺幣40萬8千元。</li>
         <li>4. 未請領其他機關所定性質相同之補助、補貼或津貼。</li>
       </ul>
       <div>（如欲瞭解其他相關資訊，請點選<a href="https://www.1955.gov.tw/0105444.html"
@@ -126,6 +126,15 @@
   <script src="core.js"></script>
   <script>
     $(function () {
+      var sysDate = new Date();
+      var sysMonth = sysDate.getMonth()+1;
+      var sysDay = sysDate.getDate();
+      if(sysMonth == 7 && sysDay < 9) {
+        $('#resultTitle').text("您不符合資格；或您109年個人所得未達40.8萬元，請於7月9日再上線登錄。");
+      } else {
+    	$('#resultTitle').text("您不符合資格。");
+      }
+
       $("#apply").on("submit", (event) => {
         event.preventDefault()
         if ($("#apply input").trigger("blur").filter(".invalid").length != 0)
