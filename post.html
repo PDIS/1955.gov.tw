@@ -244,7 +244,7 @@
         .on("1955#refresh", function (event) {
           switch ($("#apply input[name='type']:checked").val()) {
             case "1":
-              $(this).empty().append(Object.keys(bankOpts).filter(key => key !== "700").map(key => $("<option>").attr("value", key).text(`${key} ${bankOpts[key]}`)))
+              $(this).empty().append(Object.keys(bankOpts).sort().filter(key => key !== "700").map(key => $("<option>").attr("value", key).text(`${key} ${bankOpts[key]}`)))
               break
             case "2":
               $(this).empty().append(Object.keys(bankOpts).filter(key => key === "700").map(key => $("<option>").attr("value", key).text(`${key} ${bankOpts[key]}`)))
