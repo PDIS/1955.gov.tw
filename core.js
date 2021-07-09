@@ -24,7 +24,7 @@ $(function () {
   })
 
   $("#apply input[name='id']").on("blur", (event) => {
-    if (!/^[A-Z][12][0-9]{8}$/.test(event.target.value)) {
+    if (!/^[A-Z][1289ABCD][0-9]{8}$/.test(event.target.value)) {
       $(event.target).addClass("invalid").closest("td").find(".valid-hint").text("身份證字號格式錯誤")
     } else {
       $(event.target).removeClass("invalid").closest("td").find(".valid-hint").empty()
