@@ -138,6 +138,7 @@ function resolveStatus(data) {
     case "03": $(".msg3").show().siblings(".msg").hide(); break
     case "04": $(".msg4").show().siblings(".msg").hide(); break
     case "05": alert("紓困給付申請完成"); break
+    case "80": alert("已過登錄期限"); break
     case "81": alert("「市話」欄位應為包含區碼10位以內數字。"); break
     case "82": alert("「⾏動電話」欄位應為09開頭的10位數字。"); break
     case "83": alert("「郵遞區號」欄位應為3⾄6位數字。"); break
